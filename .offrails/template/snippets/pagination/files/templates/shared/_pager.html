@@ -1,0 +1,4 @@
+{#- A paged list's links (the pagination snippet): the component kit's pagination. The including
+    struct has `pager: PageLinks` (src/views/pager.rs). -#}
+{% import "components/ui.html" as ui %}
+{% call ui::pagination(pager.number, pager.pages, pager.base) %}{% endcall %}

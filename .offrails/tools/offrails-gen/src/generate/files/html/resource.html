@@ -1,0 +1,102 @@
+@@ README
+The HTML `cargo offrails g resource` writes, one section per piece (`@@ <name>` starts one; the
+section runs to the next). `__NAME__` tokens are filled by src/generate/resource.rs; everything else
+is copied as is. The pages are built from the component kit (templates/components/ui.html,
+guides/views.md#components): page_header, table, empty_state, pagination, card, confirm_button,
+field/textarea/select/checkbox and form_actions; the layout's notices show the flash. Swap the
+markup here and the golden files show the change: `UPDATE_GOLDEN=1 cargo test golden`. The
+resource snippet (template/snippets/resource) is this output too; re-export it after a change.
+@@ index
+{% extends "layouts/__LAYOUT__.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("__HP__") %}{% call ui::link_button("New __LOWER__", paths::new___S__(), icon = "plus") %}{% endcall %}{% endcall %}
+{% if __P__.is_empty() %}
+{% call ui::empty_state("No __LOWER_P__ yet", "Create the first one.", "New __LOWER__", paths::new___S__()) %}{% endcall %}
+{% else %}
+{% call ui::table("__HP__, newest first", [__COLUMNS__]) %}
+      {% for __S__ in __P__ %}
+      <tr id="__S___{{ __S__.id }}">
+__CELLS__      </tr>
+      {% endfor %}
+{% endcall %}
+{% endif %}
+{% call ui::pagination(page, pages(), page_base()) %}{% endcall %}
+{% endblock %}
+@@ index column
+("", "__LABEL__")
+@@ index label td
+        <td><a href="{{ paths::__S__(*__S__.id) }}" class="link">{{ __S__.label }}</a></td>
+@@ index td
+        <td>{{ __S__.__COL__ }}</td>
+@@ show
+{% extends "layouts/__LAYOUT__.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header(__S__.label) %}
+  {%- call ui::link_button("Edit", paths::edit___S__(*__S__.id), "secondary") %}{% endcall %}
+  {%- call ui::confirm_button("Delete", paths::delete___S__(*__S__.id), "Delete this __LOWER__? This can't be undone.") %}{% endcall %}
+{% endcall %}
+{% call ui::card() %}
+<dl class="divide-y divide-gray-200 dark:divide-gray-800">
+__ROWS__</dl>
+{% endcall %}
+<p class="mt-6 text-sm"><a href="{{ paths::__P__() }}" class="link">&larr; All __LOWER_P__</a></p>
+{% endblock %}
+@@ show row
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">__LABEL__</dt>
+    <dd class="text-sm break-words sm:col-span-2__PRE__">{{ __S__.__COL__ }}</dd>
+  </div>
+@@ show pre
+ whitespace-pre-line
+@@ new
+{% extends "layouts/__LAYOUT__.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("New __LOWER__") %}{% endcall %}
+{% call ui::card() %}{% include "__P__/_form.html" %}{% endcall %}
+{% endblock %}
+@@ edit
+{% extends "layouts/__LAYOUT__.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Edit __LOWER__") %}{% call ui::link_button("Show", paths::__S__(*id), "secondary") %}{% endcall %}{% endcall %}
+{% call ui::card() %}{% include "__P__/_form.html" %}{% endcall %}
+{% endblock %}
+@@ form
+{% import "components/ui.html" as ui %}
+<form method="post" action="{{ action }}" novalidate>
+  {% include "shared/_errors.html" %}
+__FIELDS__  {% call ui::form_actions("Save __LOWER__", paths::__P__()) %}{% endcall %}
+</form>
+@@ required
+, required = true
+@@ control string
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME____REQUIRED__, maxlength = __MAX__) %}{% endcall %}
+@@ control text
+  {% call ui::textarea(errors, "__NAME__", "__LABEL__", params.__NAME__, 6__REQUIRED__) %}{% endcall %}
+@@ control integer
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME__, "number"__REQUIRED__, step = "1", inputmode = "numeric") %}{% endcall %}
+@@ control decimal
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME____REQUIRED__, inputmode = "decimal") %}{% endcall %}
+@@ control money
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME____REQUIRED__, placeholder = "0.00", inputmode = "decimal") %}{% endcall %}
+@@ control datetime
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME__, "datetime-local"__REQUIRED__) %}{% endcall %}
+@@ control date
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME__, "date"__REQUIRED__) %}{% endcall %}
+@@ control uuid
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME____REQUIRED__, mono = true) %}{% endcall %}
+@@ control json
+  {% call ui::textarea(errors, "__NAME__", "__LABEL__", params.__NAME__, 6__REQUIRED__, mono = true) %}{% endcall %}
+@@ control boolean
+  {% call ui::checkbox(errors, "__NAME__", "__LABEL__", params.__NAME__ == "true") %}{% endcall %}
+@@ control optional boolean
+  {% call ui::select(errors, "__NAME__", "__LABEL__", [("true", "Yes"), ("false", "No")], params.__NAME__, blank = "Not set") %}{% endcall %}
+@@ control reference select
+  {% call ui::select(errors, "__NAME__", "__LABEL__", choices.__KEY__, params.__NAME____REQUIRED__, blank = "Choose a __TARGET__", key = "__KEY__") %}{% endcall %}
+@@ control reference id
+  {% call ui::field(errors, "__NAME__", "__LABEL__", params.__NAME__, "number"__REQUIRED__, step = "1", inputmode = "numeric", key = "__KEY__") %}{% endcall %}
+@@ nav link
+<a href="{{ crate::routes::paths::__PATH_FN__() }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">__LABEL__</a>

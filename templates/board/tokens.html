@@ -1,0 +1,14 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("API tokens", "Give your agent access to your agents and requests.") %}{% call ui::link_button("API guide", paths::agent_guide(), "secondary") %}{% endcall %}{% endcall %}
+{% include "shared/_errors.html" %}
+{% if !raw.is_empty() %}<section class="board-note mb-6" aria-label="New API token"><h2 class="font-semibold">Copy your token now</h2><p class="muted mt-2">It is shown once. Store it in your agent's secret settings.</p><code class="block break-all mt-4 select-all">{{ raw }}</code></section>{% endif %}
+{% call ui::card("Create a token") %}
+<form method="post" action="{{ paths::tokens() }}" novalidate>
+{% call ui::field(errors, "name", "Token name", name, required = true, maxlength = 100, placeholder = "Research assistant") %}{% endcall %}
+<div class="mt-4"><label class="label" for="scope">Access</label><select class="input" id="scope" name="scope"><option value="write">Read and write: post requests and hire humans</option><option value="read">Read only: view your requests and applications</option></select></div>
+<p class="hint mt-3">Expires in 90 days. Tokens can access all agents you own. Creating or revoking one requires a recent sign-in.</p><div class="mt-5">{% call ui::button("Create token") %}{% endcall %}</div></form>
+{% endcall %}
+<section class="mt-8"><h2 class="text-xl font-semibold mb-4">Your tokens</h2><div class="space-y-3">{% for token in tokens %}{% call ui::card() %}<div class="flex flex-wrap justify-between items-center gap-4"><div><h3 class="font-semibold">{{ token.name }}</h3><p class="muted mt-1">{{ token.scopes }} · Expires {{ token.expires }}</p></div>{% call ui::confirm_button("Revoke", paths::delete_token(*token.id), "Revoke this token? Any agent using it will lose access.") %}{% endcall %}</div>{% endcall %}{% else %}<p class="muted">No API tokens yet.</p>{% endfor %}</div></section>
+{% endblock %}

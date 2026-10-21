@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="{{ ctx.theme.as_str() }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="{{ ctx.theme.color_scheme() }}">
+  <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false,"historyCacheSize":0,"refreshOnHistoryMiss":true,"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"422","swap":true},{"code":"429","swap":true},{"code":"[45]..","swap":false,"error":true}]}'>
+  <title>{{ ctx.page_title() }}</title>
+  <meta name="description" content="{{ ctx.description }}">
+  {% if ctx.noindex %}<meta name="robots" content="noindex">{% endif %}
+  <link rel="canonical" href="{{ ctx.canonical() }}">
+  <meta name="theme-color" content="{{ crate::brand::THEME_COLOR }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ crate::config::APP_NAME }}">
+  <meta property="og:title" content="{{ ctx.page_title() }}">
+  <meta property="og:description" content="{{ ctx.description }}">
+  <meta property="og:url" content="{{ ctx.canonical() }}">
+  <meta property="og:image" content="{{ ctx.absolute("/static/og.png") }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ ctx.absolute("/static/og.png") }}">
+  <link rel="icon" href="{{ ctx.assets.favicon_svg }}" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="{{ ctx.assets.apple_touch_icon }}">
+  <link rel="stylesheet" href="{{ ctx.assets.css }}">
+  <script src="{{ ctx.assets.htmx }}" defer></script>
+  <script src="{{ ctx.assets.app_js }}" defer></script>
+  <script src="{{ ctx.assets.components_js }}" defer></script>
+  {% if ctx.dev %}<script src="{{ ctx.assets.dev_reload_js }}" defer></script>{% endif %}
+  {# A part's scripts and stylesheets for app pages load here, on every page, never in a page's
+     head block: a boosted link swaps only <body>, so a script a page adds to <head> never runs. #}
+  {% if let Some(rum) = ctx.dashboard_rum %}<script src="{{ rum.src }}" data-rum="{{ rum.endpoint }}" data-rid="{{ rum.rid }}" defer></script>{% endif %}
+  {# auth-core: password reveal, Caps Lock hint, code auto-submit, copy, print (static/auth.js). Every page: links are boosted. #}
+  <script src="{{ ctx.auth_js }}" defer></script>
+  {# samples: app head #}
+  {% block head %}{% endblock %}
+</head>
+<body hx-boost="true" class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 antialiased">
+  <a href="#main" class="skip-link">Skip to content</a>
+  {% include "components/_icons.html" %}
+  {# This file is the shell every layout extends: <head> (one set of scripts for every page, so
+     boosted links keep working), the skip link, the overlays and the dev footer. The body block
+     below is the top-nav layout; layouts/sidebar.html, marketing.html, auth.html and docs.html
+     replace it. A page picks one with {% extends %}. GUIDE: .offrails/guides/views.md#layouts #}
+  {% block body %}
+  {% include "shared/_nav.html" %}
+  <main id="main" class="mx-auto max-w-6xl px-4 py-8">
+    {% include "shared/_notices.html" %}
+    {% block content %}{% endblock %}
+  </main>
+  {% endblock %}
+  {% include "components/_overlays.html" %}
+  {% if ctx.dev %}
+  <footer class="mx-auto max-w-6xl px-4 pb-8 text-sm text-gray-600 dark:text-gray-400">
+    Development &middot; <a href="{{ paths::dev() }}" hx-boost="false" class="link">Dev tools</a>
+    &middot; <a href="{{ paths::dev_dashboard() }}" hx-boost="false" class="link">Dashboard</a>
+    &middot; <a href="{{ paths::dev_mailbox() }}" hx-boost="false" class="link">Mailbox</a>
+    &middot; <a href="/admin/jobs" hx-boost="false" class="link">Jobs</a>
+    {# samples: dev footer links #}
+  </footer>
+  {% endif %}
+</body>
+</html>

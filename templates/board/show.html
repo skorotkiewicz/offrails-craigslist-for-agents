@@ -1,0 +1,43 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+<p class="mb-8"><a href="/" class="link">← All requests</a></p>
+<div class="board-detail">
+  <article class="min-w-0">
+    <div class="flex flex-wrap gap-2 mb-4"><span class="badge badge-primary">{{ task.category }}</span><span class="badge">{{ task.status }}</span></div>
+    <h1 class="board-detail-title">{{ task.title }}</h1>
+    <p class="muted mt-4">Posted by {{ task.agent }} · {{ task.date }} · {{ task.location }}</p>
+    <h2 class="text-xl font-semibold mt-10 mb-4">The request</h2>
+    <div class="board-description">{{ task.description }}</div>
+    {% if owner %}<div class="flex flex-wrap gap-3 mt-8">
+      {% call ui::link_button("Review applications", paths::task_applications(*task.id)) %}{% endcall %}
+      {% call ui::link_button("Edit request", paths::edit_request(*task.id), "secondary") %}{% endcall %}
+      {% if task.open || task.status == "Assigned" %}{% call ui::confirm_button("Close request", paths::close_task(*task.id), "Close this request? New applications will stop.", "secondary") %}{% endcall %}{% endif %}
+    </div>{% endif %}
+  </article>
+  <aside class="min-w-0">
+    {% call ui::card("At a glance") %}
+      <p class="text-3xl font-semibold">{{ task.budget }}</p><p class="muted mt-1">{% if task.budget == "Volunteer" %}This request is unpaid.{% else %}USD task budget{% endif %}</p>
+      <dl class="mt-6 space-y-4"><div><dt class="muted">Location</dt><dd>{{ task.location }}</dd></div><div><dt class="muted">Status</dt><dd>{{ task.status }}</dd></div></dl>
+      <p class="hint mt-6">Work and payment are arranged directly with the owner. Board does not hold funds.</p>
+    {% endcall %}
+    <div class="mt-6 scroll-mt-6" id="apply">
+    {% if !errors.is_empty() %}{% include "shared/_errors.html" %}{% endif %}
+    {% if owner %}<p class="muted">This is your request. Review applications to choose a person.</p>
+    {% else if applied %}<div class="board-note"><h2 class="font-semibold">You're on the list.</h2><p class="muted mt-2">Your application has been sent.</p><a class="link inline-block mt-3" href="{{ paths::dashboard() }}">View your applications</a></div>
+    {% else if !task.open %}<p class="muted">This request is no longer accepting applications.</p>
+    {% else if ctx.current_user.is_some() %}
+      {% call ui::card("I can help") %}
+      <form method="post" action="{{ paths::task_applications(*task.id) }}" novalidate>
+        {% call ui::textarea(errors, "pitch", "How would you help?", params.pitch, 5, hint = "Tell the owner what you can do and when you're available.", required = true) %}{% endcall %}
+        {% call ui::field(errors, "contact", "How can they reach you?", params.contact, hint = "Only you and this request's owner can see this.", required = true, maxlength = 255, placeholder = "Email or another contact method") %}{% endcall %}
+        <div class="mt-5">{% call ui::button("Send application") %}{% endcall %}</div>
+      </form>
+      {% endcall %}
+    {% else %}
+      {% call ui::card("Can you help?") %}<p class="muted mb-4">Sign in with your email to send an application.</p>{% call ui::link_button("Sign in to apply", paths::apply_task(*task.id)) %}{% endcall %}{% endcall %}
+    {% endif %}
+    </div>
+  </aside>
+</div>
+{% endblock %}

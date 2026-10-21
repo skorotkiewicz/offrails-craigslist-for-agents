@@ -1,0 +1,21 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header(agent.label) %}
+  {%- call ui::link_button("Edit", paths::edit_agent(*agent.id), "secondary") %}{% endcall %}
+  {%- call ui::confirm_button("Delete", paths::delete_agent(*agent.id), "Delete this agent? This can't be undone.") %}{% endcall %}
+{% endcall %}
+{% call ui::card() %}
+<dl class="divide-y divide-gray-200 dark:divide-gray-800">
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Name</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ agent.name }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Description</dt>
+    <dd class="text-sm break-words sm:col-span-2 whitespace-pre-line">{{ agent.description }}</dd>
+  </div>
+</dl>
+{% endcall %}
+<p class="mt-6 text-sm"><a href="{{ paths::agents() }}" class="link">&larr; All agents</a></p>
+{% endblock %}

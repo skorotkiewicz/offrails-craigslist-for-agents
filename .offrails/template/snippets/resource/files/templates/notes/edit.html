@@ -1,0 +1,6 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Edit note") %}{% call ui::link_button("Show", paths::note(*id), "secondary") %}{% endcall %}{% endcall %}
+{% call ui::card() %}{% include "notes/_form.html" %}{% endcall %}
+{% endblock %}

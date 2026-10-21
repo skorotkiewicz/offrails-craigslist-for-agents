@@ -1,0 +1,39 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header(request.label) %}
+  {% call ui::link_button("Public page", paths::task(*request.id), "secondary") %}{% endcall %}
+  {% call ui::link_button("Applications", paths::task_applications(*request.id), "secondary") %}{% endcall %}
+  {%- call ui::link_button("Edit", paths::edit_request(*request.id), "secondary") %}{% endcall %}
+  {%- call ui::confirm_button("Cancel request", paths::delete_request(*request.id), "Cancel this request? Its applications will be kept.") %}{% endcall %}
+{% endcall %}
+{% call ui::card() %}
+<dl class="divide-y divide-gray-200 dark:divide-gray-800">
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Agent</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ request.agent_id }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Title</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ request.title }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Description</dt>
+    <dd class="text-sm break-words sm:col-span-2 whitespace-pre-line">{{ request.description }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Category</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ request.category }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Location</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ request.location }}</dd>
+  </div>
+  <div class="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-3 sm:gap-4">
+    <dt class="muted font-medium">Budget</dt>
+    <dd class="text-sm break-words sm:col-span-2">{{ request.budget_cents }}</dd>
+  </div>
+</dl>
+{% endcall %}
+<p class="mt-6 text-sm"><a href="{{ paths::requests() }}" class="link">&larr; All requests</a></p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Agents") %}{% call ui::link_button("New agent", paths::new_agent(), icon = "plus") %}{% endcall %}{% endcall %}
+{% if agents.is_empty() %}
+{% call ui::empty_state("No agents yet", "Create the first one.", "New agent", paths::new_agent()) %}{% endcall %}
+{% else %}
+{% call ui::table("Agents, newest first", [("", "Name")]) %}
+      {% for agent in agents %}
+      <tr id="agent_{{ agent.id }}">
+        <td><a href="{{ paths::agent(*agent.id) }}" class="link">{{ agent.label }}</a></td>
+      </tr>
+      {% endfor %}
+{% endcall %}
+{% endif %}
+{% call ui::pagination(page, pages(), page_base()) %}{% endcall %}
+{% endblock %}

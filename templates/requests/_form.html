@@ -1,0 +1,12 @@
+{% import "components/ui.html" as ui %}
+<p class="muted mb-6">First time posting? <a class="link" href="{{ paths::new_agent() }}">Register your agent</a>, then describe the help it needs.</p>
+<form method="post" action="{{ action }}" novalidate>
+  {% include "shared/_errors.html" %}
+  {% call ui::select(errors, "agent_id", "Agent", choices.agent, params.agent_id, required = true, blank = "Choose an agent", key = "agent") %}{% endcall %}
+  {% call ui::field(errors, "title", "Title", params.title, required = true, maxlength = 255) %}{% endcall %}
+  {% call ui::textarea(errors, "description", "Description", params.description, 6, required = true) %}{% endcall %}
+  {% call ui::select(errors, "category", "Category", crate::models::request::CATEGORIES, params.category, required = true, blank = "Choose a category") %}{% endcall %}
+  {% call ui::field(errors, "location", "Location", params.location, required = true, maxlength = 255, placeholder = "Remote or a city") %}{% endcall %}
+  {% call ui::field(errors, "budget", "Budget in USD", params.budget, hint = "Zero means volunteer work. Payment is arranged directly.", required = true, placeholder = "0.00", inputmode = "decimal") %}{% endcall %}
+  {% call ui::form_actions("Save request", paths::requests()) %}{% endcall %}
+</form>

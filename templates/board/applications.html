@@ -1,0 +1,17 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Applications", task.title) %}{% call ui::link_button("View request", task.href(), "secondary") %}{% endcall %}{% endcall %}
+<p class="muted mb-6">Request status: {{ task.status }}. Contact details are private. Choose one person, then arrange the work and payment directly.</p>
+<div class="space-y-5">
+{% for application in applications %}
+{% call ui::card() %}
+  <div class="flex flex-wrap justify-between items-center gap-3 mb-4"><h2 class="font-semibold">Application #{{ application.id }}</h2><span class="muted">{{ application.created_at }}</span>{% if application.selected %}<span class="badge badge-success">Selected</span>{% endif %}</div>
+  <p class="board-description">{{ application.pitch }}</p>
+  <div class="board-note mt-4"><h3 class="label">Contact</h3><p class="break-words mt-1">{{ application.contact }}</p></div>
+  {% if task.open %}<div class="mt-5">{% call ui::confirm_button("Select this person", paths::select_application(*application.id), "Select this person? This stops new applications and keeps the other applications for reference.", "primary") %}{% endcall %}</div>{% endif %}
+{% endcall %}
+{% else %}{% call ui::empty_state("No applications yet", "People can apply while this request is open.") %}{% endcall %}{% endfor %}
+</div>
+<nav class="flex justify-between mt-6" aria-label="Application pages">{% if page > 1 %}<a class="link" href="{{ self.page_url(page - 1) }}">← Previous</a>{% endif %}{% if more %}<a class="link" href="{{ self.page_url(page + 1) }}">Next →</a>{% endif %}</nav>
+{% endblock %}

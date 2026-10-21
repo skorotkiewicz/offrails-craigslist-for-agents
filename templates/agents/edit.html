@@ -1,0 +1,6 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Edit agent") %}{% call ui::link_button("Show", paths::agent(*id), "secondary") %}{% endcall %}{% endcall %}
+{% call ui::card() %}{% include "agents/_form.html" %}{% endcall %}
+{% endblock %}

@@ -1,0 +1,158 @@
+# Written by `cargo offrails generate`; read by `cargo offrails destroy` and by re-runs.
+# One [[generated]] per command: its arguments, the choices it made, and the hash of each file it
+# created (as formatted), so destroy removes only files nobody changed. Keep it in git; don't edit it.
+
+[[generated]]
+kind = "resource"
+name = "agents"
+date = "2026-10-21"
+args = [
+  "agents",
+  "name:string",
+  "description:text",
+]
+options = "guard=gen layout=2 nav=yes scope=user stamp=20261021_191809 tenancy=gen"
+files = [
+  "migration/src/m20261021_191809_create_agents.rs 2e30a1a96bc39109",
+  "src/controllers/agents/destroy.rs 1793e8a1f810c92d",
+  "src/controllers/agents/edit.rs 383194d32f99f591",
+  "src/controllers/agents/index.rs 310fa500585f1218",
+  "src/controllers/agents/mod.rs e163c37158e9f01d",
+  "src/controllers/agents/new.rs a371d695b8501bd3",
+  "src/controllers/agents/show.rs 63ea4fc08363f12c",
+  "src/models/agent/mod.rs 226c9d742f2be2fa",
+  "src/models/agent/params.rs 034609e8c352baf9",
+  "src/models/agent/queries.rs c5f38be6536b0e00",
+  "src/routes/agents.rs 00b2008e042c3755",
+  "src/views/agents.rs 4f388d269fb57518",
+  "templates/agents/_form.html a5ece38807009c57",
+  "templates/agents/edit.html 4c66a7010205bf72",
+  "templates/agents/index.html 8a8ba3e8c6f089c0",
+  "templates/agents/new.html a02c5345c5ede48b",
+  "templates/agents/show.html d6ce706da8aeee53",
+  "tests/app/agents/access_test.rs cd5a9f3289ce372e",
+  "tests/app/agents/mod.rs cb395e75ec5a0e1c",
+  "tests/app/agents/read_test.rs 826f6f069e55b6b9",
+  "tests/app/agents/write_test.rs e0b41a1d58c5e476",
+  "tests/app/factories/agent.rs 8a68527558ac1988",
+  "tests/app/models/agent_test.rs ef776999ae16fbd3",
+]
+shared = [
+  "tests/app/guard_test.rs",
+  "tests/app/models/mod.rs",
+  "tests/app/tenancy_test.rs",
+]
+
+[[generated]]
+kind = "resource"
+name = "requests"
+date = "2026-10-21"
+args = [
+  "requests",
+  "agent:references{agent}",
+  "title:string",
+  "description:text",
+  "category:string",
+  "location:string",
+  "budget:money",
+]
+options = "guard=gen layout=2 nav=yes scope=user stamp=20261021_191811 tenancy=gen"
+files = [
+  "migration/src/m20261021_191811_create_requests.rs 4ca4e752c2db4ce0",
+  "src/controllers/requests/destroy.rs ea53a46d6150ab6d",
+  "src/controllers/requests/edit.rs f8612719284b68c8",
+  "src/controllers/requests/index.rs 7b82c66c85daceac",
+  "src/controllers/requests/mod.rs 0d1893375aa2aa22",
+  "src/controllers/requests/new.rs 6fc4f3e4a0919aa7",
+  "src/controllers/requests/show.rs 4e06d6a1047f702c",
+  "src/models/request/mod.rs c571399b827e89fd",
+  "src/models/request/params.rs c560ff360ee3273d",
+  "src/models/request/queries.rs 11b6e2c0e6116c8e",
+  "src/routes/requests.rs 71c706ecf8c49c83",
+  "src/views/requests.rs 759e653a0fafcf06",
+  "templates/requests/_form.html 19a107f431f78786",
+  "templates/requests/edit.html 64c26759acea2a22",
+  "templates/requests/index.html c3337dce0de14148",
+  "templates/requests/new.html 33350d9671f19013",
+  "templates/requests/show.html 4b1576be1cd631ed",
+  "tests/app/factories/request.rs 9c30cd927304bd7c",
+  "tests/app/models/request_test.rs d54919c90fb28307",
+  "tests/app/requests/access_test.rs 6fb5216190885472",
+  "tests/app/requests/mod.rs 5bb49ecff050fd3d",
+  "tests/app/requests/read_test.rs b1ee0a50fc577dfc",
+  "tests/app/requests/write_test.rs be8195da6b02bcdd",
+]
+shared = [
+  "tests/app/guard_test.rs",
+  "tests/app/models/mod.rs",
+  "tests/app/tenancy_test.rs",
+]
+
+[[generated]]
+kind = "model"
+name = "application"
+date = "2026-10-21"
+args = [
+  "applications",
+  "request:references{request}",
+  "pitch:text",
+  "contact:string",
+]
+options = "layout=2 scope=user stamp=20261021_191825"
+files = [
+  "migration/src/m20261021_191825_create_applications.rs d3ecc14b40b2eab8",
+  "src/models/application/mod.rs cdadf44f0e2c260a",
+  "src/models/application/params.rs 26fe55e61046f570",
+  "src/models/application/queries.rs c7274947bc8dd341",
+  "tests/app/factories/application.rs 104eed61f8c29f3a",
+  "tests/app/models/application_test.rs 1f8093ad8cce5bc2",
+]
+shared = [
+  "tests/app/models/mod.rs",
+]
+
+[[generated]]
+kind = "api"
+name = "requests"
+date = "2026-10-21"
+args = [
+  "requests",
+]
+options = "api_stamp=20261021_191827 json_helper=template layout=2 model=reused scope=user stamp=20261021_191827 tenancy_row=yes"
+files = [
+  "src/controllers/api_v1_requests.rs 85b70a4135e3ff29",
+  "src/routes/api_v1_requests.rs 30adf821e30d8600",
+  "src/views/requests_json.rs 19f0b5ed9c155b41",
+  "tests/app/api_requests_test.rs cb1af07f9ecb935d",
+]
+shared = [
+  "migration/src/m20261021_191827_create_api_tokens.rs",
+  "src/controllers/api.rs",
+  "src/models/api_token.rs",
+  "src/routes/api.rs",
+  "src/tasks/tokens.rs",
+  "tests/app/api_test.rs",
+]
+
+[[generated]]
+kind = "api"
+name = "agents"
+date = "2026-10-21"
+args = [
+  "agents",
+]
+options = "api_stamp=20261021_191827 json_helper=template layout=2 model=reused scope=user stamp=20261021_191828 tenancy_row=yes"
+files = [
+  "src/controllers/api_v1_agents.rs 326cf7fe7ae06a45",
+  "src/routes/api_v1_agents.rs 5ae58478990adc88",
+  "src/views/agents_json.rs 3114598cc838bdb3",
+  "tests/app/api_agents_test.rs 5c701b02f67baaa7",
+]
+shared = [
+  "migration/src/m20261021_191827_create_api_tokens.rs",
+  "src/controllers/api.rs",
+  "src/models/api_token.rs",
+  "src/routes/api.rs",
+  "src/tasks/tokens.rs",
+  "tests/app/api_test.rs",
+]

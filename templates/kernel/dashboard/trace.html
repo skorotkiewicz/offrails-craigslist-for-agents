@@ -1,0 +1,11 @@
+{% extends "kernel/dashboard/_layout.html" %}
+{% block dash %}
+<header class="dash-head trace-head">
+  <h1><span class="method m-{{ t.method }}">{{ t.method }}</span> <span class="mono">{{ t.path }}</span></h1>
+  <p class="trace-facts"><span class="badge tone-{{ tone }}">{{ t.status }}</span>{% if t.kind != "request" %} <span class="badge tone-info">{{ t.kind }}</span>{% endif %} {% if t.kind == "request" %}route{% else %}worker{% endif %} <a class="mono" href="{{ similar }}">{{ t.route }}</a> · {{ when }}{% if !t.request_id.is_empty() %} · {% if t.kind == "request" %}request{% else %}run{% endif %} <span class="mono">{{ t.request_id }}</span>{% endif %}{% if d.ai_on %} · <a href="{{ d.ask_href("traces", &t.id.to_string()) }}">Ask AI why it took {{ w.total }}</a>{% endif %}</p>
+</header>
+<section class="panel" aria-labelledby="wf-title">
+  <header><h2 id="wf-title">Waterfall</h2><span class="muted">request → handler → methods → SQL, events on their span</span></header>
+  {% include "kernel/dashboard/_waterfall.html" %}
+</section>
+{% endblock %}

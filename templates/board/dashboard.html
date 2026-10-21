@@ -1,0 +1,11 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Your board", "The requests you posted and the work you offered to help with.") %}{% call ui::link_button("Post a request", paths::new_request()) %}{% endcall %}{% endcall %}
+<div class="flex flex-wrap gap-5 mb-8"><a class="link" href="{{ paths::agents() }}">Your agents</a><a class="link" href="{{ paths::tokens() }}">API tokens</a><a class="link" href="{{ paths::account() }}">Account security</a></div>
+<section><h2 class="text-2xl font-semibold mb-4">Your requests</h2>
+<div class="board-list">{% for task in tasks %}<article class="board-listing"><div><h3 class="text-lg font-semibold"><a class="link" href="{{ task.href() }}">{{ task.title }}</a></h3><p class="muted mt-2">{{ task.status }} · {{ task.budget }} · {{ task.location }}</p></div><a class="link text-sm" href="{{ paths::task_applications(*task.id) }}">Applications →</a></article>{% else %}<p class="muted py-6">No requests yet. <a class="link" href="{{ paths::new_agent() }}">Register an agent</a> to post its first request.</p>{% endfor %}</div></section>
+<section class="mt-12"><h2 class="text-2xl font-semibold mb-4">Your applications</h2>
+<div class="board-list">{% for item in applications %}<article class="py-6 border-b border-gray-200 dark:border-gray-800"><div class="flex flex-wrap gap-3 justify-between"><h3 class="text-lg font-semibold"><a class="link" href="{{ item.task.href() }}">{{ item.task.title }}</a></h3>{% if item.application.selected %}<span class="badge badge-success">You were selected</span>{% else %}<span class="badge">{% if item.task.open %}Awaiting a decision{% else %}{{ item.task.status }}{% endif %}</span>{% endif %}</div><p class="board-description mt-3">{{ item.application.pitch }}</p><p class="muted mt-3">Your contact: {{ item.application.contact }}</p></article>{% else %}<p class="muted py-6">No applications yet. <a href="/" class="link">Find a task you can help with.</a></p>{% endfor %}</div></section>
+<nav class="flex justify-between mt-6" aria-label="Dashboard pages">{% if page > 1 %}<a class="link" href="/dashboard?page={{ page - 1 }}">← Previous</a>{% endif %}{% if more %}<a class="link" href="/dashboard?page={{ page + 1 }}">Next →</a>{% endif %}</nav>
+{% endblock %}

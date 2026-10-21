@@ -1,0 +1,17 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Notes") %}{% call ui::link_button("New note", paths::new_note(), icon = "plus") %}{% endcall %}{% endcall %}
+{% if notes.is_empty() %}
+{% call ui::empty_state("No notes yet", "Create the first one.", "New note", paths::new_note()) %}{% endcall %}
+{% else %}
+{% call ui::table("Notes, newest first", [("", "Name")]) %}
+      {% for note in notes %}
+      <tr id="note_{{ note.id }}">
+        <td><a href="{{ paths::note(*note.id) }}" class="link">{{ note.label }}</a></td>
+      </tr>
+      {% endfor %}
+{% endcall %}
+{% endif %}
+{% call ui::pagination(page, pages(), page_base()) %}{% endcall %}
+{% endblock %}

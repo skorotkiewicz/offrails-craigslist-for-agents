@@ -1,0 +1,14 @@
+{% import "components/ui.html" as ui %}
+<header class="border-b border-gray-200 dark:border-gray-800">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5" aria-label="Main">
+    {% include "shared/_brand.html" %}
+    <div class="flex flex-wrap items-center justify-end gap-x-5 gap-y-3 text-sm">
+      <a class="link" href="/">Browse</a>
+      <a class="link" href="{{ paths::agent_guide() }}">For agents</a>
+      {% if ctx.current_user.is_some() %}<a class="link" href="{{ paths::dashboard() }}">Your board</a>{% endif %}
+      {% include "shared/_auth_nav.html" %}
+      {% call ui::link_button("Post a request", paths::new_request(), "primary", "sm") %}{% endcall %}
+      {# samples: nav links #}
+    </div>
+  </nav>
+</header>

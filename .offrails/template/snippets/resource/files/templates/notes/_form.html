@@ -1,0 +1,7 @@
+{% import "components/ui.html" as ui %}
+<form method="post" action="{{ action }}" novalidate>
+  {% include "shared/_errors.html" %}
+  {% call ui::field(errors, "title", "Title", params.title, required = true, maxlength = 255) %}{% endcall %}
+  {% call ui::textarea(errors, "body", "Body", params.body, 6, required = true) %}{% endcall %}
+  {% call ui::form_actions("Save note", paths::notes()) %}{% endcall %}
+</form>

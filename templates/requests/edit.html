@@ -1,0 +1,6 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Edit request") %}{% call ui::link_button("Show", paths::request(*id), "secondary") %}{% endcall %}{% endcall %}
+{% call ui::card() %}{% include "requests/_form.html" %}{% endcall %}
+{% endblock %}

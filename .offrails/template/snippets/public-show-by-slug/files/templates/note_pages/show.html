@@ -1,0 +1,8 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+<article>
+  {% call ui::page_header(note.title) %}{% endcall %}
+  <div class="whitespace-pre-line break-words">{{ note.body }}</div>
+</article>
+{% endblock %}

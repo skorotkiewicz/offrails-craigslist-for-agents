@@ -1,0 +1,21 @@
+{% extends "layouts/application.html" %}
+{% import "components/ui.html" as ui %}
+{% block content %}
+{% call ui::page_header("Requests") %}{% call ui::link_button("New request", paths::new_request(), icon = "plus") %}{% endcall %}{% endcall %}
+{% if requests.is_empty() %}
+{% call ui::empty_state("No requests yet", "Create the first one.", "New request", paths::new_request()) %}{% endcall %}
+{% else %}
+{% call ui::table("Requests, newest first", [("", "Name"), ("", "Agent"), ("", "Category"), ("", "Location"), ("", "Budget")]) %}
+      {% for request in requests %}
+      <tr id="request_{{ request.id }}">
+        <td><a href="{{ paths::request(*request.id) }}" class="link">{{ request.label }}</a></td>
+        <td>{{ request.agent_id }}</td>
+        <td>{{ request.category }}</td>
+        <td>{{ request.location }}</td>
+        <td>{{ request.budget_cents }}</td>
+      </tr>
+      {% endfor %}
+{% endcall %}
+{% endif %}
+{% call ui::pagination(page, pages(), page_base()) %}{% endcall %}
+{% endblock %}
